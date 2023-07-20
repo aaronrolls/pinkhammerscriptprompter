@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
+use dioxus::prelude::*;
 use std::fs::File;
 use std::io::prelude::*;
-use dioxus::prelude::*;
 
 mod the_pink_hammer;
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Line {
     text: String,
     class: String,
@@ -43,14 +43,12 @@ impl Charatures {
 //
 //    type Target = Buffer;
 
- //   fn deref(&self) -> &Self::Target{
- //       &self
- //   }
+//   fn deref(&self) -> &Self::Target{
+//       &self
+//   }
 //}
 
-
 impl Buffer {
-     
     fn new() -> Buffer {
         Buffer {
             current_line: 0,
@@ -60,7 +58,6 @@ impl Buffer {
             current_char: None,
         }
     }
-
 
     fn clear(&mut self) {
         self.display = Vec::new();
@@ -73,11 +70,10 @@ impl Buffer {
             self.display.remove(0);
         }
         self.display.push(line);
-        
     }
 
     fn set_current_counter(&mut self, number: usize) {
-       self.current_line = number;
+        self.current_line = number;
     }
 
     fn set_previous_counter(&mut self, number: usize) {
@@ -85,83 +81,90 @@ impl Buffer {
     }
     fn set_counter_from_page(&mut self, lines: &Vec<String>, number: usize) {
         if number < 25 {
-            return
+            return;
         }
         for each in 0..lines.len() {
-                    if lines[each].contains((&number.to_string())) {
-                        self.current_line = each;
-                        return
-                    }
+            if lines[each].contains((&number.to_string())) {
+                self.current_line = each;
+                return;
+            }
         }
     }
 
     fn next(&mut self) {
-        let chars: [&str;5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANABEL:", "LOUISE:"];
+        let chars: [&str; 5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANABEL:", "LOUISE:"];
         if self.current_char.is_none() {
-            return
+            return;
         }
         let current_char = match &self.current_char {
-                Some(name) => String::from(name),
-                None => String::from(""),
+            Some(name) => String::from(name),
+            None => String::from(""),
         };
 
         for each in self.current_line..self.lines.len() {
             for c in chars {
-               if self.lines[each].contains(c) {
+                if self.lines[each].contains(c) {
                     if self.lines[each].contains(&current_char) {
                         self.set_current_counter(each);
-                        self.add(Line {text: String::from(&self.lines[self.previous_line]), class: String::from("red")});
-                        self.add(Line {text: String::from(&self.lines[self.current_line]), class: String::from("red")});
+                        self.add(Line {
+                            text: String::from(&self.lines[self.previous_line]),
+                            class: String::from("red"),
+                        });
+                        self.add(Line {
+                            text: String::from(&self.lines[self.current_line]),
+                            class: String::from("red"),
+                        });
                     }
                     self.set_previous_counter(each);
                 }
             }
         }
     }
-    
-    fn next_out(&mut self, lines: &Vec<String>, current_line: &usize) {
 
+    fn next_out(&mut self, lines: &Vec<String>, current_line: &usize) {
         println!("{:?}", self.display);
-        let chars: [&str;5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANABEL:", "LOUISE:"];
+        let chars: [&str; 5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANABEL:", "LOUISE:"];
         if self.current_char.is_none() {
             self.current_char = Some("WOODY:".to_owned());
         }
         let current_char = match &self.current_char {
-                Some(name) => String::from(name),
-                None => String::from(""),
+            Some(name) => String::from(name),
+            None => String::from(""),
         };
 
         for each in *current_line..lines.len() {
             for c in chars {
-               if lines[each].contains(c) {
+                if lines[each].contains(c) {
                     if lines[each].contains(&current_char) {
                         self.set_current_counter(each);
-                        self.add(Line {text: String::from(&lines[self.previous_line]), class: String::from("red")});
-                        self.add(Line {text: String::from(&lines[*current_line]), class: String::from("red")});
-                        return
+                        self.add(Line {
+                            text: String::from(&lines[self.previous_line]),
+                            class: String::from("red"),
+                        });
+                        self.add(Line {
+                            text: String::from(&lines[*current_line]),
+                            class: String::from("red"),
+                        });
+                        return;
                     }
                     self.set_previous_counter(each);
                 }
             }
         }
     }
-
-
-
 }
 
- 
 fn get_current_number(lines: &Vec<String>, char: &str, current_line: &usize) -> usize {
     let mut prev_line: usize = 0;
     let next_line = *current_line + 1;
-    
-    let chars: [&str;5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANNABEL:", "LOUISE:"];
+
+    let chars: [&str; 5] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANNABEL:", "LOUISE:"];
 
     for each in next_line..lines.len() {
         for c in chars {
             if lines[each].contains(c) {
                 if lines[each].contains(char) {
-                    return each
+                    return each;
                 }
                 prev_line = each;
             }
@@ -170,33 +173,29 @@ fn get_current_number(lines: &Vec<String>, char: &str, current_line: &usize) -> 
     0
 }
 
-
 fn get_previous_number(lines: &Vec<String>, char: &str, current_line: &usize) -> Vec<usize> {
-    
-    let chars: [&str;6] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANNABEL:", "LOUISE:", "sd:"];
+    let chars: [&str; 6] = ["WOODY:", "HELEN:", "SIOBHAN:", "ANNABEL:", "LOUISE:", "sd:"];
     let mut counters: Vec<usize> = Vec::new();
     let mut counter = *current_line;
-    counter = counter -1;
+    counter = counter - 1;
     while counter > 0 {
-       for c in chars { 
+        for c in chars {
             if lines[counter].contains(c) {
                 if lines[counter].contains("sd:") {
                     counters.push(counter);
-                } else{
+                } else {
                     counters.push(counter);
-                    return counters
+                    return counters;
                 }
             }
-       }
+        }
 
-            counter -= 1;
+        counter -= 1;
     }
     Vec::new()
 }
 
-
 fn load_file() -> Vec<String> {
-
     let mut s = the_pink_hammer::get_text();
 
     let lines: Vec<String> = s.split("\n").map(str::to_string).collect();
@@ -204,10 +203,11 @@ fn load_file() -> Vec<String> {
     lines
 }
 
-
 fn create_line(line: &str, color: &str) -> Line {
-    let line = Line { text: String::from(line), class: String::from(color) };
-    line
+    Line {
+        text: String::from(line),
+        class: String::from(color),
+    }
 }
 
 struct Char {
@@ -215,13 +215,13 @@ struct Char {
 }
 
 impl Char {
-
     fn new() -> Char {
-        Char { charature: String::new() }
+        Char {
+            charature: String::new(),
+        }
     }
 
     fn set(&mut self, name: &str) {
-        
         if name.contains(":") {
             self.charature = String::from(name);
         } else {
@@ -232,7 +232,6 @@ impl Char {
     }
 }
 
-
 fn App(cx: Scope) -> Element {
     let lines = load_file();
     let lines2 = lines.clone();
@@ -241,14 +240,14 @@ fn App(cx: Scope) -> Element {
     let mut char = use_ref(cx, Char::new);
 
     move || {
-        char.with_mut(|c| c.set("WOODY:")); 
+        char.with_mut(|c| c.set("WOODY:"));
     };
     cx.render(rsx! {
         p{ "Currently - {char.read().charature.clone()}"}
         div {
             overflow:"auto",
             buffer.read().display.iter().map(|lines| {
-                rsx!{ p{ 
+                rsx!{ p{
                         color: "{lines.class}",
                         "{lines.text}"
                 }
@@ -280,7 +279,7 @@ fn App(cx: Scope) -> Element {
                 for each in &pcount {
                     if lines[*each].contains("sd:") {
                         buffer.with_mut(|buff| buff.add(create_line(&lines[*each], "#e3aa19")));
-                    } else {    
+                    } else {
                         buffer.with_mut(|buff| buff.add(create_line(&lines[*each], "red")));
                     }
                 }
@@ -342,12 +341,11 @@ fn App(cx: Scope) -> Element {
         }
         }
 
-        
+
         }
 
     })
 }
-
 
 fn main() {
     dioxus_web::launch(App);
