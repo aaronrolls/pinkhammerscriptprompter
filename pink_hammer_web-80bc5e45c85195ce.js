@@ -969,7 +969,7 @@ async function __wbg_init(input) {
     if (wasm !== undefined) return wasm;
 
     if (typeof input === 'undefined') {
-        input = new URL('pink_hammer_web-73157cbd0a3282da_bg.wasm', import.meta.url);
+        input = new URL('pink_hammer_web-80bc5e45c85195ce_bg.wasm', import.meta.url);
     }
     const imports = __wbg_get_imports();
 
