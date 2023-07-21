@@ -298,8 +298,8 @@ fn App(cx: Scope) -> Element {
         }
         p { "Goto Page Number" }
         input {
-            //type: "number",
-            oninput: move |evt| buffer.with_mut(|buff| buff.set_counter_from_page(&lines3, evt.value.clone().parse::<usize>().unwrap())),
+            r#type: "number",
+            oninput: move |evt| buffer.with_mut(|buff| buff.set_counter_from_page(&lines3, evt.value.clone().parse::<usize>().unwrap_or(0))),
         }
 
         div {
