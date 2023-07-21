@@ -271,6 +271,10 @@ fn App(cx: Scope) -> Element {
         button {
             padding: "10px",
             margin: "5px",
+            style: "-webkit-appearance: none;
+            -webkit-border-radius: 0;
+            border-radius: 0;
+            margin: 0.5vh; padding: 1vh; background-color: #d690d0;",
             onclick: move |_| {
                 let count = get_current_number(&lines, &char.read().charature, &buffer.read().current_line);
                 let pcount = get_previous_number(&lines, &char.read().charature, &count);
